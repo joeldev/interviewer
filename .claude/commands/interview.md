@@ -118,16 +118,26 @@ When running code or tests, use the appropriate approach for the validation tier
 
 ### Phase 1: Setup
 1. Read the round file from `series/<slug>/NN_topic/round.md`
-2. Determine the attempt number: count existing `attempt_*` files in the round's directory and use the next number
-3. Create the attempt file:
-   - For Tier 1/2 (code-based): `series/<slug>/NN_topic/attempt_N.<ext>` (extension based on `language` in series.json: python→`.py`, swift→`.swift`, typescript→`.ts`, etc.)
-   - For Tier 3 (review-only): `series/<slug>/NN_topic/attempt_N.md` with Mermaid template boilerplate
-4. Pre-populate with the **Skeleton Code** (or **Starter Template** for Tier 3) from the round file
-5. **ALWAYS immediately output the full file path** after creating it so the user can open it in their editor. Format: `Your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\`` — do this BEFORE presenting the problem.
-6. Present ONLY the **Problem Prompt** section to the user (skeleton code is already in their file)
-7. Do NOT reveal solutions, hints, clarifying question lists, or scoring rubrics
-8. Say: *"Take a moment to read the problem. Feel free to ask any clarifying questions before you start coding."*
-9. Update the round's status to `"in_progress"` in series.json
+2. Check the round's status in series.json:
+
+   **If status is `"in_progress"`** — this is a RESUME, not a new attempt:
+   - Find the most recent `attempt_*` file in the round's directory — this is the user's active workspace
+   - Read its contents to understand where they left off
+   - Output: `Resuming your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\``
+   - Briefly remind them of the problem and ask where they'd like to pick up
+   - Do NOT create a new attempt file. Do NOT re-present the full problem prompt.
+
+   **If status is `"not_started"` or `"completed"` (redo)** — this is a NEW attempt:
+   - Determine the attempt number: count existing `attempt_*` files in the round's directory and use the next number
+   - Create the attempt file:
+     - For Tier 1/2 (code-based): `series/<slug>/NN_topic/attempt_N.<ext>` (extension based on `language` in series.json: python→`.py`, swift→`.swift`, typescript→`.ts`, etc.)
+     - For Tier 3 (review-only): `series/<slug>/NN_topic/attempt_N.md` with Mermaid template boilerplate
+   - Pre-populate with the **Skeleton Code** (or **Starter Template** for Tier 3) from the round file
+   - Output: `Your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\`` — do this BEFORE presenting the problem
+   - Present ONLY the **Problem Prompt** section to the user (skeleton code is already in their file)
+   - Do NOT reveal solutions, hints, clarifying question lists, or scoring rubrics
+   - Say: *"Take a moment to read the problem. Feel free to ask any clarifying questions before you start coding."*
+   - Update the round's status to `"in_progress"` in series.json
 
 ### Phase 2: Clarifying Questions
 - When the user asks a clarifying question, check it against the **Clarifying Questions & Hidden Constraints** section in the round file
