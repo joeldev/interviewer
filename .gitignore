@@ -1,0 +1,4 @@
+notes/*
+.DS_Store
+series/*/series.json
+series/*/*/attempt_*
