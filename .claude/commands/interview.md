@@ -246,16 +246,24 @@ Ask clarifying questions conversationally (not all at once — ask 1-2 at a time
 - How many rounds? (suggest a default based on topic breadth)
 - Any specific sub-topics to include or exclude?
 - What language should code be in? (may be obvious from the domain)
+- Are there any specific companies you're preparing to interview at?
 
-### Step 2: Determine Validation Tier
-Based on the domain, automatically determine the validation tier:
+### Step 2: Research Real Interview Questions
+If the user named target companies, search the web for real interview questions from those companies relevant to the chosen domain (e.g., LeetCode tagged questions, Glassdoor reports, engineering blog posts about their interview process). Also search for commonly asked questions in the domain generally.
+
+Use what you find to inform the round topics and problem design. The goal is NOT to theme questions around a specific company or to copy problems verbatim — it's to ensure the series covers patterns and question styles that actually come up in real interviews. For example, if multiple sources say a company heavily tests graph problems or system design around caching, weight the series accordingly.
+
+Briefly share with the user what you found (e.g., "Based on what I found, Company X tends to focus heavily on tree/graph problems and concurrency — I'll make sure those are well-represented").
+
+### Step 3: Determine Validation Tier
+Based on the domain, automatically determine the validation tier (this can happen in parallel with Step 2):
 - **Python, JavaScript/TS CLI** → Tier 1 (full validation): `can_build: true, can_run_tests: true, can_see_output: true`
 - **Swift/iOS, Kotlin/Android, TypeScript frontend** → Tier 2 (build-only): `can_build: true, can_run_tests: true, can_see_output: false`, set appropriate `build_command`
 - **System design, API design, architecture** → Tier 3 (review-only): `can_build: false, can_run_tests: false, can_see_output: false`, set `notes` for guidance
 
 Tell the user what validation tier was selected and why.
 
-### Step 3: Propose Series Plan
+### Step 4: Propose Series Plan
 Show the user a proposed list of rounds:
 ```
 ## Proposed: <Series Name> (<N> rounds)
@@ -271,7 +279,7 @@ Validation: <tier description>
 
 Ask for approval before generating. The user can request changes to topics, ordering, or difficulty.
 
-### Step 4: Generate Content
+### Step 5: Generate Content
 Once approved:
 1. Create the series folder: `series/<slug>/`
 2. Create `series.template.json` with metadata, all rounds set to `not_started`, and difficulty_order. This is the committed template.
@@ -280,7 +288,7 @@ Once approved:
 5. Generate all round files. Use agents in parallel for speed — batch 3 rounds per agent. Each round file should follow the same markdown format as existing rounds (Problem Prompt, Skeleton Code, Clarifying Questions, Stages with Solutions, Interviewer Guide with hints, Scoring Rubric).
 6. For Tier 3 (review-only) rounds, use "Starter Template" with Mermaid boilerplate instead of "Skeleton Code", and attempt files should be `.md`.
 
-### Step 5: Confirm
+### Step 6: Confirm
 After generation, show the user what was created and suggest running `/interview <new_slug> status` to see their new series.
 
 ## Round File Format for Generation
