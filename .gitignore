@@ -1,4 +1,5 @@
 notes/*
 .DS_Store
 series/*/series.json
+series/*/STUDY_GUIDE.md
 series/*/*/attempt_*

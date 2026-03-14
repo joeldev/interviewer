@@ -226,7 +226,34 @@ After all stages are complete (or the user wants to stop):
 
 After the detailed feedback, if the user asks, you may walk through the reference solutions from the round file.
 
-### Phase 5: Feedback Collection
+### Phase 5: Update Study Guide
+
+After scoring, update `series/<slug>/STUDY_GUIDE.md` — a cumulative reference of concepts, patterns, and mistakes to study based on interview performance across all rounds.
+
+**If the file doesn't exist yet**, create it with this structure:
+
+```markdown
+# Study Guide — <Series Name>
+
+Accumulated from mock interview performance. Review these to turn weaknesses into strengths.
+
+---
+```
+
+**For each completed round**, append or update a section for every concept the user should study further. Each entry should:
+- Have a clear heading naming the concept/pattern (e.g., "Binary Search: Rotated Array Invariant", "Python: Operator Precedence")
+- Explain the concept concisely — teach it, don't just name it
+- Include a short code example showing the correct pattern where applicable
+- Reference which round surfaced it (e.g., "From Round 17 — Binary Search")
+
+**Important guidelines:**
+- Group entries by topic, not by round — if multiple rounds surface related concepts, consolidate them under one heading
+- If a concept was already in the study guide from a prior round, update/expand it rather than adding a duplicate
+- Focus on things the user actually got wrong or struggled with — don't pad it with things they already know
+- Keep explanations practical and concise — this is a quick-reference study sheet, not a textbook
+- Include the "why" — not just "use `(left + right) // 2`" but explain that `left + right // 2` applies floor division only to `right` due to operator precedence
+
+### Phase 6: Feedback Collection
 
 After scoring, ask the user: *"Any feedback on this round? Was anything unclear, unfair, or could be improved?"*
 
