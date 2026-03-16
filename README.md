@@ -1,12 +1,18 @@
 # Interviewer
 
-A mock technical interview system powered by [Claude Code](https://docs.anthropic.com/en/docs/claude-code). It conducts realistic, multi-stage coding interviews with scoring, hints, and detailed feedback — like having a patient, rigorous interviewer available any time.
+A mock technical interview system powered by [Claude Code](https://docs.anthropic.com/en/docs/claude-code). It conducts realistic, multi-stage interviews with scoring, hints, and detailed feedback — like having a patient, rigorous interviewer available any time.
 
 ## How It Works
 
-Each interview series contains rounds that follow a consistent format: you're given a problem, work through 2-3 progressively harder stages, and get scored on Fundamentals, Coding, and Communication (each 1-4, pass = 8+/12 with no 1s). Claude acts as the interviewer — it manages the conversation, provides hints when you're stuck, runs your code, and scores you at the end.
+You generate interview series tailored to what you're preparing for — data structures & algorithms, system design, iOS, web frontend, backend, or anything else. Each series contains rounds that progressively increase in difficulty. For each round, you work through 2-3 stages, and Claude scores you on Fundamentals, Coding, and Communication.
 
-Your progress is tracked per-series so you can pick up where you left off across sessions.
+Claude adapts its validation approach to the domain:
+
+- **Coding interviews** (Python, JS, etc.) — Claude runs your code and verifies test cases
+- **Client/mobile interviews** (Swift, Kotlin, TypeScript) — Claude compiles your code and runs unit tests; asks you to verify visual/UI behavior on your device
+- **System design interviews** — you sketch architectures using Mermaid diagrams; Claude reviews your designs, asks probing questions about trade-offs and failure modes
+
+Your progress, scores, and a cumulative study guide are tracked per-series so you can pick up where you left off.
 
 ## Requirements
 
@@ -14,77 +20,64 @@ Your progress is tracked per-series so you can pick up where you left off across
 
 ## Quick Start
 
-```
-# Clone and open in Claude Code
+```bash
 git clone git@github.com:joeldev/interviewer.git
 cd interviewer
 
-# See available series
-/interview
-
-# Start the next round in a series
-/interview doordash_dsa next
-
-# Check your progress
-/interview doordash_dsa status
-
-# Jump to a specific round
-/interview doordash_dsa 5
-
-# Generate a brand new series on any topic
+# Generate your first interview series
 /interview generate
 ```
 
-## Included Series
+The generate flow will ask you about the domain, experience level, target companies, and language. It searches for real interview questions from your target companies to inform the round topics, then generates everything.
 
-### DoorDash DSA (18 rounds, Python)
+```bash
+# List your series
+/interview
 
-Data structures and algorithms interview prep based on the DoorDash technical interview format. Covers arrays, hash maps, trees, graphs, dynamic programming, and more — ordered from easiest to hardest.
+# Work through a series
+/interview my_series next       # start next round
+/interview my_series status     # check progress
+/interview my_series 5          # jump to round 5
+```
 
-| Difficulty | Rounds |
-|------------|--------|
-| 1/5 | Arrays, Hash Maps, Sets |
-| 2/5 | Binary Search, Stacks, Queues, Sorting, Singly Linked Lists |
-| 3/5 | Doubly Linked Lists, Binary Trees, BSTs, Heaps, BFS, DFS |
-| 4/5 | Recursion/D&C, Graphs, Dijkstra's |
-| 5/5 | Dynamic Programming |
+## Example Series
 
-## Generating New Series
+Here are some examples of what you can generate:
 
-Run `/interview generate` and Claude will walk you through creating a custom interview series for any domain — iOS, system design, frontend, backend, etc. It asks about your target topics, experience level, and language, then generates all the round files.
+**Data Structures & Algorithms** — arrays, hash maps, trees, graphs, dynamic programming, sorting. Rounds are Python (or JS/TS), fully validated by running code. Good for general SWE interview prep.
 
-The system supports three validation tiers depending on the domain:
+**iOS Development** — SwiftUI, concurrency (actors, structured concurrency), networking, architecture patterns (MVVM, unidirectional data flow), performance optimization. Rounds are Swift, validated by compiling with `swiftc` and running unit tests.
 
-- **Full validation** (Python, JS) — Claude runs your code and checks output
-- **Build-only** (Swift, Kotlin, TS frontend) — Claude compiles and runs unit tests, asks you to verify visual output
-- **Review-only** (system design, architecture) — Claude reviews your designs and diagrams, asks probing questions
+**System Design** — URL shorteners, rate limiters, real-time tracking, payment processing, distributed caches, multi-region architectures. Rounds use Mermaid diagrams for architecture sketches — Claude reviews your designs rather than running code.
+
+**Web Frontend** — React/TypeScript component design, state management, performance, accessibility, real-time features. Validated by compiling with `tsc` and running unit tests.
 
 ## Scoring
 
-Each round is scored across three categories:
+Each round is scored across three categories (1-4 each):
 
 | Category | What It Measures |
 |----------|-----------------|
-| **Fundamentals** | Data structure/algorithm knowledge, complexity analysis, optimal approach |
+| **Fundamentals** | Core knowledge, complexity analysis, optimal approach |
 | **Coding** | Code quality, abstractions, clean syntax, self-debugging |
-| **Communication** | Clarifying questions, explaining your approach, receiving feedback |
+| **Communication** | Clarifying questions, explaining approach, receiving feedback |
 
 **Pass**: total >= 8/12 with no individual category at 1.
 
-After scoring, you get detailed feedback: what went well, what to improve, comparison to the optimal solution, and study recommendations.
+After each round you get detailed feedback and your series' study guide is updated with concepts to review — building a personalized reference sheet as you go.
 
 ## Project Structure
 
 ```
-series/
+.claude/commands/
+  interview.md            # The interview skill that drives everything
+series/                   # Generated locally, gitignored
   <series_slug>/
-    series.template.json   # Series metadata + clean state (committed)
-    series.json            # Your personal progress (gitignored)
-    INDEX.md               # Round listing and overview
+    series.template.json  # Series metadata + clean state
+    series.json           # Your personal progress
+    STUDY_GUIDE.md        # Cumulative study reference
+    INDEX.md              # Round listing and overview
     01_topic/
-      round.md             # Problem, solutions, hints, rubric
-      attempt_1.py         # Your work (gitignored)
-.claude/
-  commands/
-    interview.md           # The interview skill that drives everything
+      round.md            # Problem, solutions, hints, rubric
+      attempt_1.py        # Your work
 ```
