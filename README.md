@@ -6,6 +6,8 @@ A mock technical interview system powered by [Claude Code](https://docs.anthropi
 
 You generate interview series tailored to what you're preparing for — data structures & algorithms, system design, iOS, web frontend, backend, or anything else. Each series contains rounds that progressively increase in difficulty. For each round, you work through 2-3 stages, and Claude scores you on Fundamentals, Coding, and Communication.
 
+You can also name specific companies and Claude will search the web to see if there are recent knownor tagged questions for those companies, and fact those into the interview series.
+
 Claude adapts its validation approach to the domain:
 
 - **Coding interviews** (Python, JS, etc.) — Claude runs your code and verifies test cases
