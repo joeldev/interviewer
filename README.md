@@ -9,7 +9,7 @@ You generate interview series tailored to what you're preparing for — data str
 Claude adapts its validation approach to the domain:
 
 - **Coding interviews** (Python, JS, etc.) — Claude runs your code and verifies test cases
-- **Client/mobile interviews** (Swift, Kotlin, TypeScript) — Claude compiles your code and runs unit tests; asks you to verify visual/UI behavior on your device
+- **Client/mobile interviews** (Swift, Kotlin, TypeScript) — Claude compiles your code and runs unit tests; asks you to verify visual/UI behavior yourself (honor system, this is a mock interview after all)
 - **System design interviews** — you sketch architectures using Mermaid diagrams; Claude reviews your designs, asks probing questions about trade-offs and failure modes
 
 Your progress, scores, and a cumulative study guide are tracked per-series so you can pick up where you left off.
