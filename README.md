@@ -25,15 +25,16 @@ Your progress, scores, and a cumulative study guide are tracked per-series so yo
 ```bash
 git clone git@github.com:joeldev/interviewer.git
 cd interviewer
+claude (start claude)
 
-# Generate your first interview series
+# Generate your first interview series (from within a running claude session in thge interviewer directory)
 /interview generate
 ```
 
 The generate flow will ask you about the domain, experience level, target companies, and language. It searches for real interview questions from your target companies to inform the round topics, then generates everything.
 
 ```bash
-# List your series
+# List your series (from within a running claude session in the interviwer directory)
 /interview
 
 # Work through a series
