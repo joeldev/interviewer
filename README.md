@@ -25,9 +25,9 @@ Your progress, scores, and a cumulative study guide are tracked per-series so yo
 ```bash
 git clone git@github.com:joeldev/interviewer.git
 cd interviewer
-claude (start claude)
+claude # start claude, it picks up up the command when running in `interviewer`
 
-# Generate your first interview series (from within a running claude session in thge interviewer directory)
+# Generate your first interview series (from within a running claude session in the interviewer directory)
 /interview generate
 ```
 
