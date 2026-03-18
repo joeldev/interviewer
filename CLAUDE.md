@@ -22,3 +22,4 @@ Multi-series mock technical interview system. Supports multiple interview series
 - The skill file at `.claude/commands/interview.md` defines interviewer behavior
 - Series support three validation tiers: full (run code), build-only (compile + unit test), review-only (design review)
 - All series content is local — each user generates their own series via `/interview generate`
+- During generation, the system probes the user's environment for platform-specific toolchain tools (compilers, build systems, project generators, test runners, etc.) and records them in series.json so rounds are set up with the best available scaffolding

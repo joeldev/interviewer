@@ -61,6 +61,8 @@ Each series.json contains both metadata and state:
     "can_run_tests": true,
     "can_see_output": true,
     "build_command": null,
+    "toolchain": {},
+    "project_setup": "Description of how to scaffold each round's workspace",
     "notes": null
   },
   "created_at": "2026-03-10",
@@ -133,7 +135,8 @@ When running code or tests, use the appropriate approach for the validation tier
      - For Tier 1/2 (code-based): `series/<slug>/NN_topic/attempt_N.<ext>` (extension based on `language` in series.json: python→`.py`, swift→`.swift`, typescript→`.ts`, etc.)
      - For Tier 3 (review-only): `series/<slug>/NN_topic/attempt_N.md` with Mermaid template boilerplate
    - Pre-populate with the **Skeleton Code** (or **Starter Template** for Tier 3) from the round file
-   - Output: `Your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\`` — do this BEFORE presenting the problem
+   - **Set up the project/build environment**: Read the `validation.project_setup` field from series.json. Follow its instructions to scaffold whatever the round needs — project files, config, package manifests, etc. This might mean generating an Xcode project, creating a `package.json`, running `cargo init`, or nothing at all for a simple script. The `project_setup` field was written during series generation based on what tools are actually available on the user's machine, so trust and follow it.
+   - Output: `Your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\`` — do this BEFORE presenting the problem. If a project was generated, also mention how to open/build it.
    - Present ONLY the **Problem Prompt** section to the user (skeleton code is already in their file)
    - Do NOT reveal solutions, hints, clarifying question lists, or scoring rubrics
    - Say: *"Take a moment to read the problem. Feel free to ask any clarifying questions before you start coding."*
@@ -282,13 +285,47 @@ Use what you find to inform the round topics and problem design. The goal is NOT
 
 Briefly share with the user what you found (e.g., "Based on what I found, Company X tends to focus heavily on tree/graph problems and concurrency — I'll make sure those are well-represented").
 
-### Step 3: Determine Validation Tier
-Based on the domain, automatically determine the validation tier (this can happen in parallel with Step 2):
-- **Python, JavaScript/TS CLI** → Tier 1 (full validation): `can_build: true, can_run_tests: true, can_see_output: true`
-- **Swift/iOS, Kotlin/Android, TypeScript frontend** → Tier 2 (build-only): `can_build: true, can_run_tests: true, can_see_output: false`, set appropriate `build_command`
-- **System design, API design, architecture** → Tier 3 (review-only): `can_build: false, can_run_tests: false, can_see_output: false`, set `notes` for guidance
+### Step 3: Discover Toolchain & Determine Validation Tier
 
-Tell the user what validation tier was selected and why.
+**Toolchain discovery**: Based on the chosen language/domain, probe the user's environment to find the best available tools for building, testing, and project setup. Run `which` or `command -v` checks for relevant tools. Think broadly about what tools exist for this ecosystem — compilers, build systems, project generators, package managers, linters, test runners.
+
+Examples of what to look for (non-exhaustive — think about what's relevant for the specific domain):
+- **Swift/iOS**: `swiftc`, `xcodebuild`, `xcodegen`, `swift`, `xcrun simctl`, `swift-format`
+- **Kotlin/Android**: `kotlinc`, `gradle`, `adb`
+- **TypeScript/JS**: `node`, `npx`, `tsc`, `bun`, `deno`, `vitest`, `jest`, `eslint`
+- **Python**: `python3`, `pytest`, `mypy`, `ruff`
+- **Go**: `go`, `golangci-lint`
+- **Rust**: `rustc`, `cargo`, `clippy`
+- ...and so on for any domain. The point is to discover what's available, not to follow a fixed list.
+
+**Determine validation tier** based on what was found:
+- **Tier 1 — Full validation** (`can_build: true, can_run_tests: true, can_see_output: true`): Languages where Claude can run code and see output (Python, JS/TS CLI, Go, Rust, etc.)
+- **Tier 2 — Build-only** (`can_build: true, can_run_tests: true, can_see_output: false`): Languages/platforms where Claude can compile and run unit tests but can't see visual/UI output (Swift/iOS, Kotlin/Android, TS frontend, etc.)
+- **Tier 3 — Review-only** (`can_build: false, can_run_tests: false, can_see_output: false`): No code to compile (system design, API design, architecture)
+
+**Store the toolchain config** in series.json under the `validation` object:
+
+```json
+"validation": {
+  "can_build": true,
+  "can_run_tests": true,
+  "can_see_output": false,
+  "build_command": "xcodebuild -project $PROJECT -scheme $SCHEME build",
+  "toolchain": {
+    "compiler": "swiftc",
+    "project_generator": "xcodegen",
+    "build_system": "xcodebuild",
+    "test_runner": "xcodebuild test",
+    "formatter": "swift-format"
+  },
+  "project_setup": "For rounds needing frameworks (SwiftUI, MapKit, etc.), generate a project.yml and run xcodegen to create an Xcode project. For pure Swift algorithm rounds, compile directly with swiftc.",
+  "notes": null
+}
+```
+
+The `toolchain` object records which tools are available. The `project_setup` field is a plain-English description of how to set up the workspace for a new round — this is what Phase 1 reads to know what scaffolding to create. Write this field based on what tools were actually found, not on assumptions.
+
+Tell the user what you found and how rounds will be set up. If a key tool is missing (e.g., `xcodegen` not installed for iOS), suggest they install it and explain why it would help, but proceed with whatever is available.
 
 ### Step 4: Propose Series Plan
 Show the user a proposed list of rounds:
