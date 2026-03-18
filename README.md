@@ -115,7 +115,11 @@ series/                     # Generated locally, gitignored
     INDEX.md                # Round listing and overview
     01_topic/
       round.md              # Problem, solutions, hints, rubric
-      attempt_1.swift       # Your work (extension varies by language)
+      attempt_1.py          # Single-file attempt (Python, simple scripts)
+      attempt_1/            # Multi-file attempt (iOS, Cargo, npm, etc.)
+        main.swift          #   Source code
+        project.yml         #   Project config, manifests, etc.
+        MyApp.xcodeproj/    #   Generated build artifacts
 ```
 
 All series content is generated locally and gitignored — each user generates their own series via `/interview generate`.

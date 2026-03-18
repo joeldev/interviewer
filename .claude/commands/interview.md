@@ -123,20 +123,21 @@ When running code or tests, use the appropriate approach for the validation tier
 2. Check the round's status in series.json:
 
    **If status is `"in_progress"`** — this is a RESUME, not a new attempt:
-   - Find the most recent `attempt_*` file in the round's directory — this is the user's active workspace
-   - Read its contents to understand where they left off
-   - Output: `Resuming your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\``
+   - Find the most recent `attempt_N/` folder (or `attempt_N.<ext>` file for single-file series) in the round's directory — this is the user's active workspace
+   - Read the main source file to understand where they left off
+   - Output: `Resuming your workspace: \`series/<slug>/NN_topic/attempt_N/\``
    - Briefly remind them of the problem and ask where they'd like to pick up
-   - Do NOT create a new attempt file. Do NOT re-present the full problem prompt.
+   - Do NOT create a new attempt. Do NOT re-present the full problem prompt.
 
    **If status is `"not_started"` or `"completed"` (redo)** — this is a NEW attempt:
-   - Determine the attempt number: count existing `attempt_*` files in the round's directory and use the next number
-   - Create the attempt file:
-     - For Tier 1/2 (code-based): `series/<slug>/NN_topic/attempt_N.<ext>` (extension based on `language` in series.json: python→`.py`, swift→`.swift`, typescript→`.ts`, etc.)
-     - For Tier 3 (review-only): `series/<slug>/NN_topic/attempt_N.md` with Mermaid template boilerplate
-   - Pre-populate with the **Skeleton Code** (or **Starter Template** for Tier 3) from the round file
-   - **Set up the project/build environment**: Read the `validation.project_setup` field from series.json. Follow its instructions to scaffold whatever the round needs — project files, config, package manifests, etc. This might mean generating an Xcode project, creating a `package.json`, running `cargo init`, or nothing at all for a simple script. The `project_setup` field was written during series generation based on what tools are actually available on the user's machine, so trust and follow it.
-   - Output: `Your workspace file: \`series/<slug>/NN_topic/attempt_N.<ext>\`` — do this BEFORE presenting the problem. If a project was generated, also mention how to open/build it.
+   - Determine the attempt number: count existing `attempt_*` entries in the round's directory and use the next number
+   - **Choose attempt layout based on whether the toolchain produces multiple files:**
+     - **Multi-file** (Xcode projects, Cargo projects, npm packages, etc.): Create `series/<slug>/NN_topic/attempt_N/` as a directory. All files for this attempt — source code, project files, configs, build artifacts — go inside this folder. This keeps attempts isolated from each other.
+     - **Single-file** (plain Python scripts, simple TS/JS, etc.): Create `series/<slug>/NN_topic/attempt_N.<ext>` as before.
+     - Use the `validation.toolchain` and `validation.project_setup` fields from series.json to determine which layout to use. If the toolchain has a project generator, build system, or produces any config/manifest files, use the directory layout.
+   - Create the main source file and pre-populate with the **Skeleton Code** (or **Starter Template** for Tier 3) from the round file
+   - **Set up the project/build environment**: Read the `validation.project_setup` field from series.json. Follow its instructions to scaffold whatever the round needs — project files, config, package manifests, etc. All generated scaffolding goes inside the `attempt_N/` directory. The `project_setup` field was written during series generation based on what tools are actually available on the user's machine, so trust and follow it.
+   - Output the workspace path — do this BEFORE presenting the problem. If a project was generated, also mention how to open/build it.
    - Present ONLY the **Problem Prompt** section to the user (skeleton code is already in their file)
    - Do NOT reveal solutions, hints, clarifying question lists, or scoring rubrics
    - Say: *"Take a moment to read the problem. Feel free to ask any clarifying questions before you start coding."*
