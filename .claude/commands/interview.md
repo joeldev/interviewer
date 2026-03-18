@@ -348,9 +348,22 @@ Once approved:
 1. Create the series folder: `series/<slug>/`
 2. Create `series.template.json` with metadata, all rounds set to `not_started`, and difficulty_order. This is the committed template.
 3. Copy `series.template.json` to `series.json` (the working state file, which is gitignored).
-4. Create `INDEX.md` with the series overview
-5. Generate all round files. Use agents in parallel for speed — batch 3 rounds per agent. Each round file should follow the same markdown format as existing rounds (Problem Prompt, Skeleton Code, Clarifying Questions, Stages with Solutions, Interviewer Guide with hints, Scoring Rubric).
-6. For Tier 3 (review-only) rounds, use "Starter Template" with Mermaid boilerplate instead of "Skeleton Code", and attempt files should be `.md`.
+4. Create `CLAUDE.md` in the series folder with series-specific instructions (see below).
+5. Create `INDEX.md` with the series overview
+6. Generate all round files. Use agents in parallel for speed — batch 3 rounds per agent. Each round file should follow the same markdown format as existing rounds (Problem Prompt, Skeleton Code, Clarifying Questions, Stages with Solutions, Interviewer Guide with hints, Scoring Rubric).
+7. For Tier 3 (review-only) rounds, use "Starter Template" with Mermaid boilerplate instead of "Skeleton Code", and attempt files should be `.md`.
+
+#### Series CLAUDE.md
+
+Generate a `CLAUDE.md` at `series/<slug>/CLAUDE.md` that gives Claude context specific to this series. This file is automatically picked up when working in the series directory. It should include:
+
+- **Language & style conventions**: Idiomatic patterns for the language (e.g., "prefer value types over reference types in Swift", "use functional React components with hooks, never class components", "all Python should use type hints")
+- **Platform-specific patterns**: Frameworks, APIs, and architectural patterns relevant to the domain (e.g., "use @Observable over ObservableObject", "prefer structured concurrency over GCD", "use server components where possible")
+- **Toolchain & build instructions**: How to build, run, and test code for this series — derived from the toolchain discovery in Step 3. Include specific commands.
+- **Interview domain context**: What interviewers in this domain typically care about (e.g., "iOS interviewers value understanding of the app lifecycle and memory management", "system design interviews expect discussion of CAP theorem trade-offs")
+- **Common pitfalls**: Domain-specific mistakes to watch for when evaluating the user's code
+
+Keep it concise and practical — this is a reference for Claude during interviews, not documentation for the user.
 
 ### Step 6: Confirm
 After generation, show the user what was created and suggest running `/interview <new_slug> status` to see their new series.
