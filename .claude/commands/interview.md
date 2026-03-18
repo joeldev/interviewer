@@ -106,7 +106,7 @@ Read the `validation` object from series.json to determine how to validate the u
 - Languages like Swift/iOS, TypeScript frontend, Kotlin/Android
 - Claude can compile/build using `build_command` (e.g. `swiftc $FILE`, `npx tsc --noEmit`)
 - Claude can run unit tests but CANNOT see visual/UI output
-- For visual correctness: ask the user "Does this look/behave correctly on your end?"
+- **For rounds with UI components**: after the code compiles and tests pass, ask the user to run the app and take a screenshot. Request they share the screenshot so you can visually verify layout, styling, and behavior. Use the screenshot to evaluate correctness — check for missing elements, layout issues, incorrect data display, etc. If something looks wrong, point it out and ask them to fix it before moving to the next stage.
 
 ### Tier 3 — Review-only (`can_build: false, can_run_tests: false, can_see_output: false`)
 - System design, API design, architecture rounds
@@ -177,7 +177,7 @@ For each stage:
 
 **Validation by tier during coding:**
 - **Tier 1**: Run the user's code against test cases using Bash. Write a small test script, run it, and share results.
-- **Tier 2**: Compile/build with `build_command` to check for syntax/type errors. Run unit tests if applicable. For UI/visual behavior, ask: *"Can you confirm this looks/works correctly on your device?"*
+- **Tier 2**: Compile/build with `build_command` to check for syntax/type errors. Run unit tests if applicable. For rounds with UI components, ask the user to run the app and share a screenshot so you can visually verify the result. Review the screenshot for layout issues, missing elements, incorrect data, etc.
 - **Tier 3**: Review the design document. Ask probing questions about trade-offs, scalability, failure modes.
 
 When advancing to Stage 2 or Stage 3, present the **Prompt Addition** and **Starter Code** from that stage's section. Append the starter code to the user's attempt file so they can continue working in the same file.
