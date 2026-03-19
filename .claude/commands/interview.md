@@ -73,9 +73,18 @@ Each series.json contains both metadata and state:
 }
 ```
 
-## Difficulty Progression
+## Difficulty Progression & Round Numbering
 
 When the user asks for "next", read the `difficulty_order` array from the series' `series.json`. "Next" means: the first round in that order whose status is `"not_started"` or `"in_progress"`.
+
+**CRITICAL — Round numbering**: The round number shown to the user is ALWAYS the 1-based position in `difficulty_order`, NEVER the folder name prefix. Folder names like `18_sorting/` are internal identifiers — do not expose them to the user.
+
+For example, if `difficulty_order` is `["01_arrays", "02_hash_maps", "03_sets", "17_binary_search", "04_stacks", "05_queues", "18_sorting", ...]`, then:
+- `01_arrays` → "Round 1"
+- `17_binary_search` → "Round 4"
+- `18_sorting` → "Round 7"
+
+This applies everywhere: dashboards, interview prompts, feedback, study guide references, and all communication with the user. When the user says `/interview <series> 7`, that means the 7th entry in `difficulty_order`, not the folder starting with `07`.
 
 ## Dashboard Display
 
@@ -92,7 +101,7 @@ Average Score: N/12
 ...
 ```
 
-Display rounds in the difficulty_order from series.json. After showing the dashboard, suggest what to do next.
+Display rounds in `difficulty_order` from series.json. The `#` column is the 1-based position in `difficulty_order` (NOT the folder prefix number). After showing the dashboard, suggest what to do next.
 
 ## Validation Behavior
 
@@ -120,7 +129,8 @@ When running code or tests, use the appropriate approach for the validation tier
 
 ### Phase 1: Setup
 1. Read the round file from `series/<slug>/NN_topic/round.md`
-2. Check the round's status in series.json:
+2. **Determine the user-facing round number**: find this round's position in `difficulty_order` (1-based). Use this number — not the folder prefix — in all output (e.g., "Round 7: Sorting" even if the folder is `18_sorting/`). The round file's `# Round N:` header should already match since it was generated using the progression position, but if it doesn't, use the `difficulty_order` position.
+3. Check the round's status in series.json:
 
    **If status is `"in_progress"`** — this is a RESUME, not a new attempt:
    - Find the most recent `attempt_N/` folder (or `attempt_N.<ext>` file for single-file series) in the round's directory — this is the user's active workspace
@@ -248,7 +258,7 @@ Accumulated from mock interview performance. Review these to turn weaknesses int
 - Have a clear heading naming the concept/pattern (e.g., "Binary Search: Rotated Array Invariant", "Python: Operator Precedence")
 - Explain the concept concisely — teach it, don't just name it
 - Include a short code example showing the correct pattern where applicable
-- Reference which round surfaced it (e.g., "From Round 17 — Binary Search")
+- Reference which round surfaced it using the progression number (e.g., "From Round 4 — Binary Search" if binary search is 4th in `difficulty_order`), not the folder prefix
 
 **Important guidelines:**
 - Group entries by topic, not by round — if multiple rounds surface related concepts, consolidate them under one heading
@@ -351,7 +361,7 @@ Once approved:
 3. Copy `series.template.json` to `series.json` (the working state file, which is gitignored).
 4. Create `CLAUDE.md` in the series folder with series-specific instructions (see below).
 5. Create `INDEX.md` with the series overview
-6. Generate all round files. Use agents in parallel for speed — batch 3 rounds per agent. Each round file should follow the same markdown format as existing rounds (Problem Prompt, Skeleton Code, Clarifying Questions, Stages with Solutions, Interviewer Guide with hints, Scoring Rubric).
+6. Generate all round files. Use agents in parallel for speed — batch 3 rounds per agent. Each round file should follow the same markdown format as existing rounds (Problem Prompt, Skeleton Code, Clarifying Questions, Stages with Solutions, Interviewer Guide with hints, Scoring Rubric). **Pass each agent the round's progression number** (1-based position in `difficulty_order`) so the `# Round N:` header in each file matches the order the user will encounter it.
 7. For Tier 3 (review-only) rounds, use "Starter Template" with Mermaid boilerplate instead of "Skeleton Code", and attempt files should be `.md`.
 
 #### Series CLAUDE.md
@@ -371,10 +381,10 @@ After generation, show the user what was created and suggest running `/interview
 
 ## Round File Format for Generation
 
-When generating new round files, follow this structure (matching existing rounds):
+When generating new round files, follow this structure. The `N` in the header is the round's 1-based position in `difficulty_order` — since you define the difficulty order before generating files, use that position as the round number from the start:
 
 ```markdown
-# Round NN: <Topic> — <Problem Title>
+# Round N: <Topic> — <Problem Title>
 
 ## Problem Prompt
 <The problem description shown to the candidate>

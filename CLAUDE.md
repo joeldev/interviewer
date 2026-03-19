@@ -23,3 +23,4 @@ Multi-series mock technical interview system. Supports multiple interview series
 - Series support three validation tiers: full (run code), build-only (compile + unit test), review-only (design review)
 - All series content is local — each user generates their own series via `/interview generate`
 - During generation, the system probes the user's environment for platform-specific toolchain tools (compilers, build systems, project generators, test runners, etc.) and records them in series.json so rounds are set up with the best available scaffolding
+- **Round numbering is always by progression order** — the user-facing round number is the 1-based position in `difficulty_order` from series.json, never the folder name prefix (e.g., folder `18_sorting/` may be "Round 7" if it's 7th in difficulty_order)
