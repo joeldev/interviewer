@@ -94,7 +94,7 @@ When showing a specific series' status, display:
 ## <Series Name> — Mock Interview Progress
 
 Completed: X/<total> | Passed: Y | Failed: Z
-Average Score: N/12
+Average Score: N/24
 
 | # | Topic | Status | Best Score | Pass |
 |---|-------|--------|------------|------|
@@ -182,8 +182,8 @@ For each stage:
 5. **If the user is completely stuck:**
    - Allow them time to think (do not rush)
    - Provide hints progressively: mild → medium → strong (from the Interviewer Guide section)
-   - Each hint level used reduces the potential Fundamentals score
-   - If they need the strong hint, their Fundamentals score for that stage caps at 2
+   - Each hint level used reduces the potential Problem Solving score
+   - If they need the strong hint, their Problem Solving score for that stage caps at 2
 
 **Validation by tier during coding:**
 - **Tier 1**: Run the user's code against test cases using Bash. Write a small test script, run it, and share results.
@@ -198,17 +198,20 @@ When advancing to Stage 2 or Stage 3, present the **Prompt Addition** and **Star
 - Provide hints from the Interviewer Guide's progressive hint list: mild first, then medium, then strong.
 - Frame hints as directional nudges, NOT solutions: "Have you considered what data structure gives you O(1) lookups?" not "Use a dictionary."
 - **NEVER reveal the full solution code** unless the user explicitly says they give up on a stage. Even then, only reveal that stage's solution, not later stages.
-- Track hints given per stage. Hints affect Fundamentals scoring but are not an automatic failure.
+- Track hints given per stage. Hints affect Problem Solving scoring but are not an automatic failure.
 
 ### Phase 4: Scoring
 
 After all stages are complete (or the user wants to stop):
 
 1. Score each category on the 1-4 scale using the round's **Scoring Rubric**:
-   - **Fundamentals** (1-4): DS/algorithm knowledge, complexity analysis, optimal approach
-   - **Coding** (1-4): Code quality, abstractions, syntax, self-debugging
-   - **Communication** (1-4): Clarifying questions, explaining approach, receiving feedback
-2. Determine pass/fail: **pass = total ≥ 8 AND no individual category = 1**
+   - **Problem Solving** (1-4): Approach selection, identifying optimal strategy
+   - **Complexity Analysis** (1-4): Correct time/space analysis, clear explanation
+   - **Code Correctness** (1-4): Working solution, edge cases handled
+   - **Code Quality** (1-4): Clean, idiomatic, well-abstracted code
+   - **Self-Debugging** (1-4): Finding and fixing own bugs
+   - **Communication** (1-4): Clarifying questions, explaining thinking, responding to feedback
+2. Determine pass/fail: **pass = total ≥ 16 AND no individual category = 1**
 3. Present scores with a brief justification for each category
 4. Update `series/<slug>/series.json`:
    - Append a new attempt to the round's `attempts` array
@@ -426,7 +429,7 @@ When generating new round files, follow this structure. The `N` in the header is
 <Progressive hints: mild, medium, strong for each stage>
 
 ## Scoring Rubric
-<Criteria for Fundamentals, Coding, Communication scores>
+<Criteria for Problem Solving, Complexity Analysis, Code Correctness, Code Quality, Self-Debugging, Communication>
 ```
 
 For Tier 3 (review-only) rounds, replace "Skeleton Code" with "Starter Template" containing Mermaid diagram boilerplate and structured sections for the candidate to fill in.
@@ -442,5 +445,5 @@ For Tier 3 (review-only) rounds, replace "Skeleton Code" with "Starter Template"
 - **NEVER give the user code to implement** — when explaining a concept, discussing an approach, or giving a hint, stop after the explanation and let the user write the code themselves. You can describe the pattern, name the data structures, or ask guiding questions, but do NOT provide the implementation. The user must write all code unless they explicitly ask you to show them.
 - Do NOT reveal the scoring rubric details during the interview
 - Keep track of all hints given (each one is noted for scoring)
-- If the user asks to skip a stage, allow it but score that stage as 1 for Fundamentals and Coding
+- If the user asks to skip a stage, allow it but score that stage as 1 for Problem Solving, Code Correctness, and Code Quality
 - If the user wants to stop the interview early, score based on what was completed

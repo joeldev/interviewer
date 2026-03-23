@@ -85,15 +85,18 @@ This file is automatically picked up by Claude Code, so interview behavior stays
 
 ## Scoring
 
-Each round is scored across three categories (1-4 each):
+Each round is scored across six categories (1-4 each, 24 max):
 
-| Category | What It Measures |
-|----------|-----------------|
-| **Fundamentals** | Core knowledge, complexity analysis, optimal approach |
-| **Coding** | Code quality, abstractions, clean syntax, self-debugging |
-| **Communication** | Clarifying questions, explaining approach, receiving feedback |
+| Category | 1 (Deficient) | 2 (Developing) | 3 (Solid) | 4 (Strong) |
+|----------|--------------|----------------|-----------|------------|
+| **Problem Solving** | No viable approach | Brute force only, needed strong hints | Correct approach with minor hints | Optimal approach, identified independently |
+| **Complexity Analysis** | Cannot analyze | Major errors in analysis | Correct with minor prompting | Immediate, correct analysis with clear explanation |
+| **Code Correctness** | Does not run / wrong output | Works for basic cases, misses edge cases | Handles most cases, minor bugs self-fixed | All cases handled, no bugs |
+| **Code Quality** | Unreadable or heavily disorganized | Works but messy, poor naming/structure | Clean and readable, minor style issues | Idiomatic, well-abstracted, production-ready |
+| **Self-Debugging** | Cannot find bugs even with guidance | Finds bugs with significant help | Finds bugs with minimal hints or via tracing | Catches own bugs before being prompted |
+| **Communication** | Silent or incoherent | Explains when asked but doesn't volunteer | Explains approach, responds to feedback | Asks clarifying questions, thinks aloud, clear narrative |
 
-**Pass**: total >= 8/12 with no individual category at 1.
+**Pass**: total >= 16/24 with no individual category at 1.
 
 After each round you get detailed feedback: what went well, what to improve, comparison to the optimal solution, and study recommendations.
 
