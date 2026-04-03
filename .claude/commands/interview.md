@@ -168,12 +168,11 @@ For each stage:
 2. Evaluate their code against the stage's solution in the round file:
    - Is the core logic correct?
    - Does it handle edge cases from the guide?
-   - Is the time/space complexity optimal (or close)?
+   - Is the time/space complexity optimal (or close)? (skip for UI-centric rounds — see below)
 3. **If correct:**
    - Briefly acknowledge it works
-   - Ask them to state the time and space complexity
-   - If they get complexity right, present the next stage's **Prompt Addition**
-   - If they get complexity wrong, gently probe until they get it right or explain it
+   - **If the round involves meaningful algorithmic complexity** (data structures, algorithms, optimization, data processing, etc.): ask them to state the time and space complexity. If they get it right, present the next stage. If wrong, gently probe until they get it right or explain it.
+   - **If the round is UI-centric** (building views, layouts, navigation, animations, etc.) with no notable algorithmic component: skip the complexity question entirely and move straight to the next stage's **Prompt Addition**.
 4. **If the code has bugs:**
    - First, ask the user to trace through a specific test case (choose one that exposes the bug)
    - If they find and fix the bug themselves, do NOT penalize — self-debugging is valued
@@ -206,7 +205,7 @@ After all stages are complete (or the user wants to stop):
 
 1. Score each category on the 1-4 scale using the round's **Scoring Rubric**:
    - **Problem Solving** (1-4): Approach selection, identifying optimal strategy
-   - **Complexity Analysis** (1-4): Correct time/space analysis, clear explanation
+   - **Complexity Analysis** (1-4): Correct time/space analysis, clear explanation. **For UI-centric rounds with no notable algorithmic complexity, score this as N/A** — it does not count toward the total or pass threshold. Adjust the max score and pass threshold proportionally (20 max, pass ≥ 14).
    - **Code Correctness** (1-4): Working solution, edge cases handled
    - **Code Quality** (1-4): Clean, idiomatic, well-abstracted code
    - **Self-Debugging** (1-4): Finding and fixing own bugs
